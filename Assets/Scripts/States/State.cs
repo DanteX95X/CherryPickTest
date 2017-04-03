@@ -6,7 +6,8 @@ namespace Assets.Scripts.States
 	{
 		#region variables
 
-		public static State currentState = null;
+		[SerializeField]
+		GameObject ui = null;
 
 		#endregion
 
@@ -15,12 +16,17 @@ namespace Assets.Scripts.States
 
 		public void OnEnable()
 		{
-			currentState = this;
+			if (ui != null)
+				ui.SetActive(true);
+
 			Init();
 		}
 
 		public void OnDisable()
 		{
+			if (ui != null)
+				ui.SetActive(false);
+
 			CleanUp();
 		}
 
