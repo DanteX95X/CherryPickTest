@@ -33,6 +33,11 @@ namespace Assets.Scripts.Game
 			get { return type; }
 			set { type = value; }
 		}
+
+		public Dictionary<Vector3, Field> Neighbours
+		{
+			get { return neighbours; }
+		}
 		#endregion
 
 

@@ -22,6 +22,16 @@ namespace Assets.Scripts.Game
 			get { return grid; }
 		}
 
+		public Field Source
+		{
+			get { return source; }
+		}
+
+		public Field Destination
+		{
+			get { return destination; }
+		}
+
 		#endregion
 
 		#region methods

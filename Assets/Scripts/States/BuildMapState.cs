@@ -36,6 +36,9 @@ namespace Assets.Scripts.States
 				field.SetUpNeighbours(currentMap.Grid);
 				field.FieldObject = Instantiate(prefabs[(int)field.Type], field.Position, Quaternion.identity) as GameObject;
 			}
+
+			GetComponent<FindPathState>().CurrentMap = currentMap;
+			ChangeState<FindPathState>();
 		}
 
 		public override void UpdateLoop()
