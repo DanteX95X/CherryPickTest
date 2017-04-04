@@ -36,6 +36,7 @@ namespace Assets.Scripts.Utilities
 
 			frontier.Enqueue(source);
 			cameFrom[source] = null;
+			visited.Add(source);
 
 			while(frontier.Count > 0)
 			{
@@ -46,14 +47,13 @@ namespace Assets.Scripts.Utilities
 					break;
 				}
 
-				visited.Add(currentField);
-
 				foreach(Field neighbour in currentField.Neighbours.Values)
 				{
 					if (!visited.Contains(neighbour))
 					{
 						frontier.Enqueue(neighbour);
 						cameFrom[neighbour] = currentField;
+						visited.Add(neighbour);
 					}
 				}
 			}
@@ -77,6 +77,7 @@ namespace Assets.Scripts.Utilities
 			cameFrom[source] = null;
 			cost[source] = 0;
 			frontier.Push(source, heuristic(source, destination));
+			visited.Add(source);
 
 			while(frontier.Count > 0)
 			{
@@ -87,7 +88,6 @@ namespace Assets.Scripts.Utilities
 					break;
 				}
 
-				visited.Add(currentField);
 				foreach(Field neighbour in currentField.Neighbours.Values)
 				{
 					double neighbourCost = neighbour.GetCost() + cost[currentField];
