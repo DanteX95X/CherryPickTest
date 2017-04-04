@@ -53,19 +53,13 @@ namespace Assets.Scripts.States
 
 		public void GenerateMap()
 		{
-			if(mapSize < minSize)
-			{
-				Debug.Log("Map is too small");
-				return;
-			}
-
 			try
 			{
 				newMap = new Map(mapSize, numberOfObstacles);
 			}
 			catch(Exception exception)
 			{
-				Debug.Log(exception.Message);
+				DisplayMessage(exception.Message);
 				newMap = null;
 				return;
 			}

@@ -18,6 +18,8 @@ namespace Assets.Scripts.Game
 		Field destination;
 		string name;
 
+		readonly int minSize = 10;
+
 		#endregion
 
 		#region properties
@@ -52,12 +54,18 @@ namespace Assets.Scripts.Game
 		{
 			get { return obstacles; }
 		}
+
 		#endregion
 
 		#region methods
 
 		public Map(int size, int numberOfObstacles)
 		{
+			if(size < minSize)
+			{
+				throw new Exception("Map size must be at least " + minSize);
+			}
+
 			source = null;
 			destination = null;
 			this.size = size;
@@ -246,6 +254,11 @@ namespace Assets.Scripts.Game
 			if (!hasSucceeded)
 			{
 				throw new Exception("Map size is not an integer");
+			}
+
+			if(size < 10)
+			{
+				throw new Exception("Map size must be at least " + minSize);
 			}
 		}
 

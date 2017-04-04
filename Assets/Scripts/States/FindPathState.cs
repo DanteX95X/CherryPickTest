@@ -76,7 +76,7 @@ namespace Assets.Scripts.States
 
 			if (path.Count < 2)
 			{
-				Debug.Log("Destination Unreachable");
+				DisplayMessage("Destination unreachable!");
 				return;
 			}
 
@@ -95,13 +95,13 @@ namespace Assets.Scripts.States
 		{
 			if (mapNameInput.text == "")
 			{
-				Debug.Log("Level name cannot be empty");
+				DisplayMessage("Level name cannot be empty!");
 				return;
 			}
 
 			currentMap.Name = mapNameInput.text;
 			System.IO.File.WriteAllText(mapNameInput.text + ".level", currentMap.ToString());
-			Debug.Log("Level saved");
+			DisplayMessage("Level saved");
 		}
 
 

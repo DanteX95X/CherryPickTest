@@ -56,7 +56,7 @@ namespace Assets.Scripts.States
 			}
 			catch (Exception exception)
 			{
-				Debug.Log(exception.Message);
+				DisplayMessage(exception.Message);
 				return;
 			}
 		}
