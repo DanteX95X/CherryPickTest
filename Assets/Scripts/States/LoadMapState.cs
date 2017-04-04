@@ -5,40 +5,39 @@ using UnityEngine;
 
 namespace Assets.Scripts.States
 {
-	class MainMenuState : State
+	class LoadMapState : State
 	{
+
 		#region methods
 
 		public override void Init()
 		{
-			
+			try
+			{
+				LoadMap("ufo.level");
+			}
+			catch(Exception exception)
+			{
+				Debug.Log(exception.Message);
+				return;
+			}
+
+			ChangeState<BuildMapState>();
 		}
 
 		public override void UpdateLoop()
 		{
-			
 		}
 
 		public override void CleanUp()
 		{
-			
 		}
 
-		public void GoToGenerateMapState()
+		public void LoadMap(string path)
 		{
-			ChangeState<GenerateMapState>();
-		}
+			GetComponent<BuildMapState>().CurrentMap = new Game.Map(path);
 
-		public void GoToMapLoading()
-		{
-			ChangeState<LoadMapState>();
 		}
-
-		public void ShutDownApplication()
-		{
-			Application.Quit();
-		}
-
 		#endregion
 	}
 }

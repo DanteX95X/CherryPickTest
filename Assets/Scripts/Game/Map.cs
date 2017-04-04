@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
+using System;
 
 using Assets.Scripts.Utilities;
 
@@ -62,15 +64,7 @@ namespace Assets.Scripts.Game
 			name = "";
 			obstacles = new List<Obstacle>();
 
-			grid = new Dictionary<Vector3, Field>();
-			for (int x = 0; x < size; ++x)
-			{
-				for (int y = 0; y < size; ++y)
-				{
-					Vector3 position = new Vector3(x, y, 0);
-					grid[position] = new Field(position);
-				}
-			}
+			SetUpFields();
 
 			source = GetRandomField();
             source.Type = FieldType.SOURCE;
@@ -80,6 +74,120 @@ namespace Assets.Scripts.Game
 
 			RandomizeObstaclesLocation(numberOfObstacles);
 		}
+
+		public Map(string path)
+		{
+			using (StreamReader reader = new StreamReader(path))
+			{
+				LoadMapName(reader);
+				Debug.Log(name);
+				LoadMapSize(reader);
+				Debug.Log(size);
+				SetUpFields();
+				LoadSourceAndDestination(reader);
+				Debug.Log(source.Position);
+				Debug.Log(destination.Position);
+				LoadObstacles(reader);
+				Debug.Log(obstacles.Count);
+			}
+		}
+
+		public void SetUpFields()
+		{
+			grid = new Dictionary<Vector3, Field>();
+			for (int x = 0; x < size; ++x)
+			{
+				for (int y = 0; y < size; ++y)
+				{
+					Vector3 position = new Vector3(x, y, 0);
+					grid[position] = new Field(position);
+				}
+			}
+		}
+
+		#region level_loading_methods
+		void LoadMapName(StreamReader reader)
+		{
+			string line = reader.ReadLine();
+			name = line;
+		}
+
+		void LoadMapSize(StreamReader reader)
+		{
+			string line = reader.ReadLine();
+			bool hasSucceeded = Int32.TryParse(line, out size);
+
+			if(!hasSucceeded)
+			{
+				throw new Exception("Map size is not an integer");
+			}
+		}
+
+		void LoadSourceAndDestination(StreamReader reader)
+		{
+			string line = reader.ReadLine();
+			string[] sourcePosition = line.Split();
+			line = reader.ReadLine();
+			string[] destinationPosition = line.Split();
+
+			int[] position = new int[2];
+			for(int i = 0; i < 2; ++i)
+			{
+				if(!Int32.TryParse(sourcePosition[i], out position[i]))
+				{
+					throw new Exception("Source position is not a vector of integers");
+				}
+			}
+
+			if(!grid.TryGetValue(new Vector3(position[0], position[1]), out source))
+			{
+				throw new Exception("Source - invalid position");
+			}
+			source.Type = FieldType.SOURCE;
+
+			for (int i = 0; i < 2; ++i)
+			{
+				if (!Int32.TryParse(destinationPosition[i], out position[i]))
+				{
+					throw new Exception("Destination position is not a vector of integers");
+				}
+			}
+			if(!grid.TryGetValue(new Vector3(position[0], position[1]), out destination))
+			{
+				throw new Exception("Destination - invalid position");
+			}
+			destination.Type = FieldType.DESTINATION;
+		}
+
+		void LoadObstacles(StreamReader reader)
+		{
+			obstacles = new List<Obstacle>();
+
+			string line = reader.ReadLine();
+			int numberOfObstacles = 0;
+			if (!Int32.TryParse(line, out numberOfObstacles))
+			{
+				Debug.Log(line);
+				throw new Exception("Number of obstacles is not an integer");
+			}
+
+			for(int i = 0; i < numberOfObstacles; ++i)
+			{
+				line = reader.ReadLine();
+				string[] words = line.Split();
+				int[] data = new int[4];
+
+				for(int j = 0; j < 4; ++j)
+				{
+					if(!Int32.TryParse(words[j], out data[j]))
+					{
+						throw new Exception("Obstacle data is corrupted");
+					}
+				}
+				PlaceObstacle(new Vector2(data[2], data[3]), new Vector3(data[0], data[1], 0));
+			}
+		}
+		#endregion
 
 		void RandomizeObstaclesLocation(int desiredQuantity)
 		{
@@ -91,8 +199,8 @@ namespace Assets.Scripts.Game
 			for(int i = 0; i < desiredQuantity; ++i)
 			{
 				Field obstacleField = null;
-				int width = (int)Mathf.Round(Random.Range(1.0f, 2.0f));
-				int height = (int)Mathf.Round(Random.Range(1.0f, 2.0f));
+				int width = (int)Mathf.Round(UnityEngine.Random.Range(1.0f, 2.0f));
+				int height = (int)Mathf.Round(UnityEngine.Random.Range(1.0f, 2.0f));
 				Vector2 obstacleSize = new Vector2(width, height);
 
 				do
@@ -152,6 +260,8 @@ namespace Assets.Scripts.Game
 			}
 
 			obstacles.Add(new Obstacle(position, obstacleSize));
+			Debug.Log(obstacleSize);
+			Debug.Log(position);
 		}
 
 		Field GetRandomField()
@@ -165,7 +275,7 @@ namespace Assets.Scripts.Game
 					return null;
 
 				outField = null;
-				Vector3 randomPosition = new Vector3(Random.Range(0, size), Random.Range(0, size), 0);
+				Vector3 randomPosition = new Vector3(UnityEngine.Random.Range(0, size), UnityEngine.Random.Range(0, size), 0);
 				grid.TryGetValue(randomPosition, out outField);
 				++trials;
 			}
