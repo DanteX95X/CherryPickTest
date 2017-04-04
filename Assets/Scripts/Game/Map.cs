@@ -80,15 +80,10 @@ namespace Assets.Scripts.Game
 			using (StreamReader reader = new StreamReader(path))
 			{
 				LoadMapName(reader);
-				Debug.Log(name);
 				LoadMapSize(reader);
-				Debug.Log(size);
 				SetUpFields();
 				LoadSourceAndDestination(reader);
-				Debug.Log(source.Position);
-				Debug.Log(destination.Position);
 				LoadObstacles(reader);
-				Debug.Log(obstacles.Count);
 			}
 		}
 
@@ -260,8 +255,6 @@ namespace Assets.Scripts.Game
 			}
 
 			obstacles.Add(new Obstacle(position, obstacleSize));
-			Debug.Log(obstacleSize);
-			Debug.Log(position);
 		}
 
 		Field GetRandomField()

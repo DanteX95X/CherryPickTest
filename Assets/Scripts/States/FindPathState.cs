@@ -37,10 +37,7 @@ namespace Assets.Scripts.States
 
 		public override void Init()
 		{
-			if(currentMap.Name != "")
-			{
-				mapNameInput.text = currentMap.Name;
-			}
+			mapNameInput.text = currentMap.Name;
 		}
 
 		public override void UpdateLoop()
