@@ -16,12 +16,6 @@ namespace Assets.Scripts.UI
 		[SerializeField]
 		Text levelName = null;
 
-		[SerializeField]
-		Image iconImage = null;
-
-		[SerializeField]
-		Text lifes = null;
-
 		#endregion
 
 		#region properties
@@ -34,16 +28,6 @@ namespace Assets.Scripts.UI
 		public Text LevelName
 		{
 			get { return levelName; }
-		}
-
-		public Image IconImage
-		{
-			get { return iconImage; }
-		}
-
-		public Text Lifes
-		{
-			get { return lifes; }
 		}
 		#endregion
 	}

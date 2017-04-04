@@ -100,90 +100,6 @@ namespace Assets.Scripts.Game
 			}
 		}
 
-		#region level_loading_methods
-		void LoadMapName(StreamReader reader)
-		{
-			string line = reader.ReadLine();
-			name = line;
-		}
-
-		void LoadMapSize(StreamReader reader)
-		{
-			string line = reader.ReadLine();
-			bool hasSucceeded = Int32.TryParse(line, out size);
-
-			if(!hasSucceeded)
-			{
-				throw new Exception("Map size is not an integer");
-			}
-		}
-
-		void LoadSourceAndDestination(StreamReader reader)
-		{
-			string line = reader.ReadLine();
-			string[] sourcePosition = line.Split();
-			line = reader.ReadLine();
-			string[] destinationPosition = line.Split();
-
-			int[] position = new int[2];
-			for(int i = 0; i < 2; ++i)
-			{
-				if(!Int32.TryParse(sourcePosition[i], out position[i]))
-				{
-					throw new Exception("Source position is not a vector of integers");
-				}
-			}
-
-			if(!grid.TryGetValue(new Vector3(position[0], position[1]), out source))
-			{
-				throw new Exception("Source - invalid position");
-			}
-			source.Type = FieldType.SOURCE;
-
-			for (int i = 0; i < 2; ++i)
-			{
-				if (!Int32.TryParse(destinationPosition[i], out position[i]))
-				{
-					throw new Exception("Destination position is not a vector of integers");
-				}
-			}
-			if(!grid.TryGetValue(new Vector3(position[0], position[1]), out destination))
-			{
-				throw new Exception("Destination - invalid position");
-			}
-			destination.Type = FieldType.DESTINATION;
-		}
-
-		void LoadObstacles(StreamReader reader)
-		{
-			obstacles = new List<Obstacle>();
-
-			string line = reader.ReadLine();
-			int numberOfObstacles = 0;
-			if (!Int32.TryParse(line, out numberOfObstacles))
-			{
-				Debug.Log(line);
-				throw new Exception("Number of obstacles is not an integer");
-			}
-
-			for(int i = 0; i < numberOfObstacles; ++i)
-			{
-				line = reader.ReadLine();
-				string[] words = line.Split();
-				int[] data = new int[4];
-
-				for(int j = 0; j < 4; ++j)
-				{
-					if(!Int32.TryParse(words[j], out data[j]))
-					{
-						throw new Exception("Obstacle data is corrupted");
-					}
-				}
-				PlaceObstacle(new Vector2(data[2], data[3]), new Vector3(data[0], data[1], 0));
-			}
-		}
-		#endregion
-
 		void RandomizeObstaclesLocation(int desiredQuantity)
 		{
 			if(desiredQuantity > size*size - 2)
@@ -312,6 +228,91 @@ namespace Assets.Scripts.Game
 			return mapString;
 		}
 
+		#endregion
+
+
+		#region level_loading_methods
+		void LoadMapName(StreamReader reader)
+		{
+			string line = reader.ReadLine();
+			name = line;
+		}
+
+		void LoadMapSize(StreamReader reader)
+		{
+			string line = reader.ReadLine();
+			bool hasSucceeded = Int32.TryParse(line, out size);
+
+			if (!hasSucceeded)
+			{
+				throw new Exception("Map size is not an integer");
+			}
+		}
+
+		void LoadSourceAndDestination(StreamReader reader)
+		{
+			string line = reader.ReadLine();
+			string[] sourcePosition = line.Split();
+			line = reader.ReadLine();
+			string[] destinationPosition = line.Split();
+
+			int[] position = new int[2];
+			for (int i = 0; i < 2; ++i)
+			{
+				if (!Int32.TryParse(sourcePosition[i], out position[i]))
+				{
+					throw new Exception("Source position is not a vector of integers");
+				}
+			}
+
+			if (!grid.TryGetValue(new Vector3(position[0], position[1]), out source))
+			{
+				throw new Exception("Source - invalid position");
+			}
+			source.Type = FieldType.SOURCE;
+
+			for (int i = 0; i < 2; ++i)
+			{
+				if (!Int32.TryParse(destinationPosition[i], out position[i]))
+				{
+					throw new Exception("Destination position is not a vector of integers");
+				}
+			}
+			if (!grid.TryGetValue(new Vector3(position[0], position[1]), out destination))
+			{
+				throw new Exception("Destination - invalid position");
+			}
+			destination.Type = FieldType.DESTINATION;
+		}
+
+		void LoadObstacles(StreamReader reader)
+		{
+			obstacles = new List<Obstacle>();
+
+			string line = reader.ReadLine();
+			int numberOfObstacles = 0;
+			if (!Int32.TryParse(line, out numberOfObstacles))
+			{
+				Debug.Log(line);
+				throw new Exception("Number of obstacles is not an integer");
+			}
+
+			for (int i = 0; i < numberOfObstacles; ++i)
+			{
+				line = reader.ReadLine();
+				string[] words = line.Split();
+				int[] data = new int[4];
+
+				for (int j = 0; j < 4; ++j)
+				{
+					if (!Int32.TryParse(words[j], out data[j]))
+					{
+						throw new Exception("Obstacle data is corrupted");
+					}
+				}
+				PlaceObstacle(new Vector2(data[2], data[3]), new Vector3(data[0], data[1], 0));
+			}
+		}
 		#endregion
 	}
 }

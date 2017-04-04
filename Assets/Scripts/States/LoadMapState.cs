@@ -8,14 +8,6 @@ using Assets.Scripts.UI;
 
 namespace Assets.Scripts.States
 {
-	[System.Serializable]
-	public class Item
-	{
-		public string levelName;
-		public Sprite iconImage;
-		public string lifes;
-	}
-
 	class LoadMapState : State
 	{
 		#region variables
@@ -23,7 +15,7 @@ namespace Assets.Scripts.States
 		[SerializeField]
 		GameObject button = null;
 		[SerializeField]
-		List<Item> itemList = null;
+		List<string> mapNames = null;
 		[SerializeField]
 		Transform contentPanel = null;
 
@@ -37,7 +29,7 @@ namespace Assets.Scripts.States
 		public override void Init()
 		{
 			buttons = new List<GameObject>();
-			itemList = new List<Item>();
+			mapNames = new List<string>();
 			GetItemsList();
 			PopulateList();
 		}
@@ -52,7 +44,7 @@ namespace Assets.Scripts.States
 			{
 				Destroy(button);
 			}
-			itemList.Clear();
+			mapNames.Clear();
 		}
 
 		public void LoadMap(string path)
@@ -71,18 +63,13 @@ namespace Assets.Scripts.States
 
 		void PopulateList()
 		{
-			foreach (var item in itemList)
+			foreach (string name in mapNames)
 			{
 				GameObject newButton = Instantiate(button) as GameObject;
 				LevelButton levelButton = newButton.GetComponent<LevelButton>();
-				levelButton.LevelName.text = item.levelName;
-				levelButton.Lifes.text = item.lifes;
-				levelButton.IconImage.sprite = item.iconImage;
+				levelButton.LevelName.text = name;
 
-				string nameOfLevel = item.levelName;
-
-
-				levelButton.Button.onClick.AddListener(() => { LoadMap(nameOfLevel + ".level"); });
+				levelButton.Button.onClick.AddListener(() => { LoadMap(name + ".level"); });
 				newButton.transform.SetParent(contentPanel);
 
 				buttons.Add(newButton);
@@ -91,19 +78,20 @@ namespace Assets.Scripts.States
 
 		public void GetItemsList()
 		{
-			DirectoryInfo dir = new DirectoryInfo("./");
-			FileInfo[] info = dir.GetFiles("*.level");
-			foreach (FileInfo f in info)
+			DirectoryInfo directory = new DirectoryInfo("./");
+			FileInfo[] info = directory.GetFiles("*.level");
+			foreach (FileInfo file in info)
 			{
-				Debug.Log(f.Name);
-				StreamReader reader = new StreamReader(f.Name);
-
-				Item item = new Item();
-				item.levelName = reader.ReadLine();
-				item.lifes = "3"; // position in file in the future
-
-				itemList.Add(item);
+				Debug.Log(file.Name);
+				StreamReader reader = new StreamReader(file.Name);
+				string mapName = reader.ReadLine();
+				mapNames.Add(mapName);
 			}
+		}
+
+		public void GoBackToMainMenu()
+		{
+			ChangeState<MainMenuState>();
 		}
 		#endregion
 	}
