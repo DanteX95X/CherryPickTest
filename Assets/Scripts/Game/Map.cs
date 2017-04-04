@@ -20,6 +20,12 @@ namespace Assets.Scripts.Game
 
 		#region properties
 
+		public string Name
+		{
+			get { return name; }
+			set { name = value; }
+		}
+
 		public int Size
 		{
 			get { return size; }
@@ -53,7 +59,7 @@ namespace Assets.Scripts.Game
 			source = null;
 			destination = null;
 			this.size = size;
-			name = "default";
+			name = "";
 			obstacles = new List<Obstacle>();
 
 			grid = new Dictionary<Vector3, Field>();
@@ -142,9 +148,10 @@ namespace Assets.Scripts.Game
 					Vector3 obstaclePosition = position + displacement;
 
 					grid[obstaclePosition].Type = FieldType.OBSTACLE;
-					obstacles.Add(new Obstacle(position, obstacleSize));
 				}
 			}
+
+			obstacles.Add(new Obstacle(position, obstacleSize));
 		}
 
 		Field GetRandomField()
@@ -184,6 +191,22 @@ namespace Assets.Scripts.Game
 					GameObject.Destroy(obstacle.ObstacleObject);
 				}
 			}
+		}
+
+		public override string ToString()
+		{
+			string mapString = "";
+			mapString += name + "\n" + size + "\n";
+			mapString += source.Position.x + " " + source.Position.y + "\n";
+			mapString += destination.Position.x + " " + destination.Position.y + "\n";
+			mapString += obstacles.Count + "\n";
+
+			foreach(Obstacle obstacle in obstacles)
+			{
+				mapString += obstacle.Position.x + " " + obstacle.Position.y + " " + obstacle.Size.x + " " + obstacle.Size.y + "\n";
+			}
+
+			return mapString;
 		}
 
 		#endregion

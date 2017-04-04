@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 using Assets.Scripts.Game;
 using Assets.Scripts.Utilities;
@@ -15,6 +16,9 @@ namespace Assets.Scripts.States
 
 		[SerializeField]
 		List<Material> fieldMaterials = null;
+
+		[SerializeField]
+		InputField mapNameInput = null;
 
 		Map currentMap;
 
@@ -33,7 +37,10 @@ namespace Assets.Scripts.States
 
 		public override void Init()
 		{
-			
+			if(currentMap.Name != "")
+			{
+				mapNameInput.text = currentMap.Name;
+			}
 		}
 
 		public override void UpdateLoop()
@@ -86,6 +93,20 @@ namespace Assets.Scripts.States
 		{
 			ChangeState<MainMenuState>();
 		}
+
+		public void SaveLevelToFile()
+		{
+			if (mapNameInput.text == "")
+			{
+				Debug.Log("Level name cannot be empty");
+				return;
+			}
+
+			currentMap.Name = mapNameInput.text;
+			System.IO.File.WriteAllText(mapNameInput.text + ".level", currentMap.ToString());
+			Debug.Log("Level saved");
+		}
+
 
 		#endregion
 	}
