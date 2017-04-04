@@ -16,6 +16,16 @@ namespace Assets.Scripts.Game
 
 		#region properties
 
+		public Vector3 Position
+		{
+			get { return position; }
+		}
+
+		public Vector2 Size
+		{
+			get { return size; }
+		}
+
 		public GameObject ObstacleObject
 		{
 			get { return obstacleObject; }

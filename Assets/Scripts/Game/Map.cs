@@ -7,17 +7,6 @@ namespace Assets.Scripts.Game
 {
 	class Map
 	{
-		#region enum
-
-		enum ObstacleType
-		{
-			SMALL = 0,
-			HORIZONTAL = 1,
-			VERTICAL = 2,
-			BIG = 3,
-		}
-		#endregion
-
 		#region variables
 
 		int size;
@@ -30,6 +19,11 @@ namespace Assets.Scripts.Game
 		#endregion
 
 		#region properties
+
+		public int Size
+		{
+			get { return size; }
+		}
 
 		public Dictionary<Vector3, Field> Grid
 		{
@@ -72,8 +66,6 @@ namespace Assets.Scripts.Game
 				}
 			}
 
-			Debug.Log(size);
-
 			source = GetRandomField();
             source.Type = FieldType.SOURCE;
 
@@ -85,42 +77,35 @@ namespace Assets.Scripts.Game
 
 		void RandomizeObstaclesLocation(int desiredQuantity)
 		{
-			int obstaclesQuantity = 0;
-			int maxTrials = size * size;
+			if(desiredQuantity > size*size - 2)
+			{
+				throw new System.Exception("Impossible to place that many obstacles");
+			}
 
-			while(obstaclesQuantity < desiredQuantity)
+			for(int i = 0; i < desiredQuantity; ++i)
 			{
 				Field obstacleField = null;
 				int width = (int)Mathf.Round(Random.Range(1.0f, 2.0f));
 				int height = (int)Mathf.Round(Random.Range(1.0f, 2.0f));
 				Vector2 obstacleSize = new Vector2(width, height);
-				Debug.Log(obstacleSize);
-				int numberOfTrials = 0;
+
 				do
 				{
 					Field consideredField = GetRandomField();
-					++numberOfTrials;
-
-					if (DoesObstacleFitLocation(obstacleSize, consideredField.Position))
+					if(consideredField == null)
 					{
-						obstacleField = consideredField;
-						++obstaclesQuantity;
+						throw new System.Exception("Failed to generate that many obstacles");
 					}
-					else if(consideredField.Type == FieldType.CLEAR)
+
+					if (!DoesObstacleFitLocation(obstacleSize, consideredField.Position))
 					{
 						obstacleSize = new Vector2(1, 1);
-						obstacleField = consideredField;
-						++obstaclesQuantity;
 					}
-				}
-				while (obstacleField == null && numberOfTrials < maxTrials);
 
-				if(numberOfTrials > maxTrials)
-				{
-					Debug.Log("Failed to generate obstacles");
-					return;
+					obstacleField = consideredField;
 				}
-
+				while (obstacleField == null);
+				
 				PlaceObstacle(obstacleSize, obstacleField.Position);
 			}
 		}
@@ -139,7 +124,6 @@ namespace Assets.Scripts.Game
 
 					if(consideredObstacle == null || consideredObstacle.Type != FieldType.CLEAR)
 					{
-						Debug.Log("Too large obstacle");
 						return false;
 					}
 				}
@@ -158,16 +142,27 @@ namespace Assets.Scripts.Game
 					Vector3 obstaclePosition = position + displacement;
 
 					grid[obstaclePosition].Type = FieldType.OBSTACLE;
+					obstacles.Add(new Obstacle(position, obstacleSize));
 				}
 			}
-			obstacles.Add(new Obstacle(position, obstacleSize));
 		}
 
 		Field GetRandomField()
 		{
-			Vector3 randomPosition = new Vector3(Random.Range(0, size), Random.Range(0, size), 0);
-			Field outField;
-			grid.TryGetValue(randomPosition, out outField);
+			Field outField = null;
+			int trials = 0;
+			int maxTrials = size * size;
+			do
+			{
+				if (trials > maxTrials)
+					return null;
+
+				outField = null;
+				Vector3 randomPosition = new Vector3(Random.Range(0, size), Random.Range(0, size), 0);
+				grid.TryGetValue(randomPosition, out outField);
+				++trials;
+			}
+			while (outField == null || outField.Type != FieldType.CLEAR);
 
 			return outField;
 		}

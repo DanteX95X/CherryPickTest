@@ -20,6 +20,8 @@ namespace Assets.Scripts.States
 		int numberOfObstacles;
 		Map newMap;
 		bool isMapGeneratedSuccessfully;
+
+		readonly int minSize = 10;
 		#endregion
 
 		#region methods
@@ -51,13 +53,22 @@ namespace Assets.Scripts.States
 
 		public void GenerateMap()
 		{
-			if(mapSize < 6)
+			if(mapSize < minSize)
 			{
 				Debug.Log("Map is too small");
 				return;
 			}
 
-			newMap = new Map(mapSize, numberOfObstacles);
+			try
+			{
+				newMap = new Map(mapSize, numberOfObstacles);
+			}
+			catch(Exception exception)
+			{
+				Debug.Log(exception.Message);
+				newMap = null;
+				return;
+			}
 			isMapGeneratedSuccessfully = true;
 		}
 
@@ -82,7 +93,7 @@ namespace Assets.Scripts.States
 		public int LoadFromInputField(InputField input)
 		{
 			int value = -1;
-			bool isNumber = Int32.TryParse(input.text, out value);
+			Int32.TryParse(input.text, out value);
 
 			return value;
 		}
