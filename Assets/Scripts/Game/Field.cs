@@ -61,7 +61,7 @@ namespace Assets.Scripts.Game
 				Field neighbour = null;
 				grid.TryGetValue(position + displacement, out neighbour);
 
-				if (neighbour != null)
+				if (neighbour != null && neighbour.Type != FieldType.OBSTACLE)
 				{
 					neighbours[displacement] = neighbour;
 				}

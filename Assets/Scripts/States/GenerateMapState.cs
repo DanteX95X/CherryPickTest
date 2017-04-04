@@ -52,11 +52,10 @@ namespace Assets.Scripts.States
 
 		public void LoadMapSize()
 		{
-			Debug.Log(mapSizeInput.text);
 			int tempSize = -1;
 			bool isNumber = Int32.TryParse(mapSizeInput.text, out tempSize);
 
-			if(isNumber)
+			if (isNumber)
 			{
 				mapSize = tempSize;
 			}
