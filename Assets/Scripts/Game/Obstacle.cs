@@ -33,7 +33,6 @@ namespace Assets.Scripts.Game
 			{
 				obstacleObject = value;
 				obstacleObject.transform.localScale = new Vector3(size.x, size.y, 2);
-				//Vector3 bottomLeft = position - new Vector3(1, 1)/2;
 				obstacleObject.transform.position = position + new Vector3(size.x - 1, size.y - 1)/2;
 			}
 		}
