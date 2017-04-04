@@ -9,7 +9,7 @@ namespace Assets.Scripts.Utilities
 	{
 		List<Pair<T, double>> nodes { get; set; }
 
-		public int Count { get { return nodes.Count; } }
+		public int Count { get { return nodes.Count - 1; } }
 
 		public Pair<T, double> Top
 		{

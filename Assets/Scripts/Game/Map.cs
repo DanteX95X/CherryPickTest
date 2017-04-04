@@ -22,7 +22,7 @@ namespace Assets.Scripts.Game
 
 		int size;
 		Dictionary<Vector3, Field> grid;
-		List<Pair<Vector3, Vector2>> obstacles;
+		List<Obstacle> obstacles;
 		Field source;
 		Field destination;
 		string name;
@@ -46,17 +46,21 @@ namespace Assets.Scripts.Game
 			get { return destination; }
 		}
 
+		public List<Obstacle> Obstacles
+		{
+			get { return obstacles; }
+		}
 		#endregion
 
 		#region methods
 
-		public Map(int size)
+		public Map(int size, int numberOfObstacles)
 		{
 			source = null;
 			destination = null;
 			this.size = size;
 			name = "default";
-			obstacles = new List<Pair<Vector3, Vector2>>();
+			obstacles = new List<Obstacle>();
 
 			grid = new Dictionary<Vector3, Field>();
 			for (int x = 0; x < size; ++x)
@@ -76,7 +80,7 @@ namespace Assets.Scripts.Game
 			destination = GetRandomField();
             destination.Type = FieldType.DESTINATION;
 
-			RandomizeObstaclesLocation(10);
+			RandomizeObstaclesLocation(numberOfObstacles);
 		}
 
 		void RandomizeObstaclesLocation(int desiredQuantity)
@@ -110,7 +114,6 @@ namespace Assets.Scripts.Game
 					}
 				}
 				while (obstacleField == null && numberOfTrials < maxTrials);
-				//Debug.Log("Size: " + obstacleSize + " Position: " + obstacleField.Position + " Trials: " + numberOfTrials);
 
 				if(numberOfTrials > maxTrials)
 				{
@@ -157,7 +160,7 @@ namespace Assets.Scripts.Game
 					grid[obstaclePosition].Type = FieldType.OBSTACLE;
 				}
 			}
-			obstacles.Add(new Pair<Vector3, Vector2>(position, obstacleSize));
+			obstacles.Add(new Obstacle(position, obstacleSize));
 		}
 
 		Field GetRandomField()
@@ -176,6 +179,14 @@ namespace Assets.Scripts.Game
 				if(field.FieldObject)
 				{
 					GameObject.Destroy(field.FieldObject);
+				}
+			}
+
+			foreach(Obstacle obstacle in obstacles)
+			{
+				if(obstacle.ObstacleObject)
+				{
+					GameObject.Destroy(obstacle.ObstacleObject);
 				}
 			}
 		}

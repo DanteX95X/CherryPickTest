@@ -37,6 +37,11 @@ namespace Assets.Scripts.States
 				field.FieldObject = Instantiate(prefabs[(int)field.Type], field.Position, Quaternion.identity) as GameObject;
 			}
 
+			foreach (Obstacle obstacle in currentMap.Obstacles)
+			{
+				obstacle.ObstacleObject = Instantiate(prefabs[3]) as GameObject;
+			}
+
 			GetComponent<FindPathState>().CurrentMap = currentMap;
 			ChangeState<FindPathState>();
 		}

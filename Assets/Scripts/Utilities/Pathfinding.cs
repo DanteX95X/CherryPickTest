@@ -114,7 +114,7 @@ namespace Assets.Scripts.Utilities
 			do
 			{
 				path.Add(currentField);
-				currentField = cameFrom[currentField];
+				cameFrom.TryGetValue(currentField, out currentField);
 			}
 			while (currentField != null);
 

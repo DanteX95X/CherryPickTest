@@ -13,8 +13,11 @@ namespace Assets.Scripts.States
 
 		[SerializeField]
 		InputField mapSizeInput = null;
+		[SerializeField]
+		InputField numberOfObstaclesInput = null;
 
 		int mapSize;
+		int numberOfObstacles;
 		Map newMap;
 		bool isMapGeneratedSuccessfully;
 		#endregion
@@ -25,9 +28,11 @@ namespace Assets.Scripts.States
 		{
 			isMapGeneratedSuccessfully = false;
 			mapSize = 0;
+			numberOfObstacles = 0;
 			newMap = null;
 
 			LoadMapSize();
+			LoadNumberOfObstacles();
 		}
 
 		public override void UpdateLoop()
@@ -46,20 +51,42 @@ namespace Assets.Scripts.States
 
 		public void GenerateMap()
 		{
-			newMap = new Map(mapSize);
+			if(mapSize < 6)
+			{
+				Debug.Log("Map is too small");
+				return;
+			}
+
+			newMap = new Map(mapSize, numberOfObstacles);
 			isMapGeneratedSuccessfully = true;
 		}
 
 		public void LoadMapSize()
 		{
-			int tempSize = -1;
-			bool isNumber = Int32.TryParse(mapSizeInput.text, out tempSize);
-
-			if (isNumber)
+			int value = LoadFromInputField(mapSizeInput);
+			if (value != -1)
 			{
-				mapSize = tempSize;
+				mapSize = value;
 			}
 		}
+
+		public void LoadNumberOfObstacles()
+		{
+			int value = LoadFromInputField(numberOfObstaclesInput);
+			if(value != -1)
+			{
+				numberOfObstacles = value;
+			}
+		}
+
+		public int LoadFromInputField(InputField input)
+		{
+			int value = -1;
+			bool isNumber = Int32.TryParse(input.text, out value);
+
+			return value;
+		}
+		
 
 		#endregion
 	}
