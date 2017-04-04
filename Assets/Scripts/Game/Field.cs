@@ -68,6 +68,11 @@ namespace Assets.Scripts.Game
 			}
 		}
 
+		public double GetCost()
+		{
+			return 1;
+		}
+
 		#endregion
 	}
 }

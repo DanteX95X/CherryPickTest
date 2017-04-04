@@ -26,6 +26,8 @@ namespace Assets.Scripts.States
 			isMapGeneratedSuccessfully = false;
 			mapSize = 0;
 			newMap = null;
+
+			LoadMapSize();
 		}
 
 		public override void UpdateLoop()
@@ -39,7 +41,7 @@ namespace Assets.Scripts.States
 
 		public override void CleanUp()
 		{
-
+			newMap = null;
 		}
 
 		public void GenerateMap()

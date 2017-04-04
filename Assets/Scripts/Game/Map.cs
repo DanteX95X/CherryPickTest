@@ -53,10 +53,13 @@ namespace Assets.Scripts.Game
 				}
 			}
 
+			Debug.Log(size);
+
 			source = GetRandomField();
-			source.Type = FieldType.SOURCE;
+            source.Type = FieldType.SOURCE;
+
 			destination = GetRandomField();
-			destination.Type = FieldType.DESTINATION;
+            destination.Type = FieldType.DESTINATION;
 
 		}
 
@@ -66,7 +69,20 @@ namespace Assets.Scripts.Game
 			Field outField;
 			grid.TryGetValue(randomPosition, out outField);
 
+			Debug.Log(randomPosition);
+
 			return outField;
+		}
+
+		public void DestroyMap()
+		{
+			foreach(Field field in grid.Values)
+			{
+				if(field.FieldObject)
+				{
+					GameObject.Destroy(field.FieldObject);
+				}
+			}
 		}
 
 		#endregion

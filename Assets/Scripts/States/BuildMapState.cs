@@ -47,6 +47,7 @@ namespace Assets.Scripts.States
 
 		public override void CleanUp()
 		{
+			currentMap = null;
 		}
 		#endregion
 	}
