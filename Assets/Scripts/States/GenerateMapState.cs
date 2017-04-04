@@ -21,7 +21,6 @@ namespace Assets.Scripts.States
 		Map newMap;
 		bool isMapGeneratedSuccessfully;
 
-		readonly int minSize = 10;
 		#endregion
 
 		#region methods
@@ -92,6 +91,10 @@ namespace Assets.Scripts.States
 			return value;
 		}
 		
+		public void GoToMainMenu()
+		{
+			ChangeState<MainMenuState>();
+		}
 
 		#endregion
 	}
